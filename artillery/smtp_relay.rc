@@ -1,0 +1,45 @@
+<ruby>
+=begin
+  Name:  battery/smtp_relay.rc
+    This script is intended to be used with the Metasploit Framework as a part of the battery suite of resource scripts
+    For more information see:
+      Metasploit Framework:  https://github.com/rapid7/metasploit-framework
+
+  Author: Keith Proffitt
+
+  Description:
+  This module tests if an SMTP server will accept (via a code 250) an e-mail by using a variation of testing methods. Some of the extended 
+  methods will try to abuse configuration or mailserver flaws. EXTENDED is set to false.
+=end
+
+# Print Header
+print_status "auxiliary/scanner/smtp/smtp_relay"
+  
+# Get a list of target services
+targets = []
+begin
+  framework.db.services.each do |service|
+    if ( service.port.eql? 25 and service.state.eql? 'open')
+      targets << service.host.address
+    end
+  end
+  # Remove any duplicate entries
+  targets.uniq!
+rescue ActiveRecord::ConnectionNotEstablished
+  puts "DB not connected..."
+  return
+end
+
+if targets.empty?
+  print_warning "No targets found"
+else
+  # Setup the module
+  self.run_single("use auxiliary/scanner/smtp/smtp_relay")
+  self.run_single("set ShowProgress false")
+  self.run_single("set VERBOSE true")
+  self.run_single("set MAILFROM stt@pentest.com")
+  self.run_single("set MAILTO STT-Testers@fisglobal.com")
+  self.run_single("set RHOSTS '#{targets.join(' ')}'")
+  self.run_single("run")
+end
+</ruby>

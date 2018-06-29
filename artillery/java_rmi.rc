@@ -1,0 +1,60 @@
+<ruby>
+=begin
+  Name:  http_trace_method.rc
+    This script is intended to be used with the Metasploit Framework as a part of the battery suite of resource scripts
+    For more information see:
+      Battery Resource Scripts: https://github.com/kn0/battery
+      Metasploit Framework:  https://github.com/rapid7/metasploit-framework
+
+  Author: Matt Young
+    twitter: @sil3ntcor3
+    
+  Description:
+    This Metasploit resource script is used to detect Java RMI endpoints
+    It does so by using auxiliary/scanner/misc/java_rmi_server against all discovered java-rmi services
+    Targets are chosen by matching service names with 'java-rmi'
+
+=end
+# Print Header
+print_status "Using auxiliary/scanner/misc/java_rmi_server"
+  
+# Get a list of target services
+targets = []
+
+begin
+  framework.db.services.each do |service|
+    if ( service.name =~ /java-rmi/i and service.state.eql? 'open' and service.proto.eql? 'tcp')
+      targets << {'ip' => service.host.address, 'port' => service.port}
+    end
+  end
+
+  # Remove any duplicate entries
+  targets.uniq!
+  
+rescue ActiveRecord::ConnectionNotEstablished
+  puts "DB not connected..."
+  return
+end
+
+if targets.empty?
+  print_warning "No targets found"
+else
+  # Get a lits of unique target ports
+  target_ports = (targets.map {|t| t['port'] }).uniq
+
+  # Setup the module
+  self.run_single("use auxiliary/scanner/misc/java_rmi_server")
+  self.run_single("set ShowProgress true")
+  self.run_single("set VERBOSE false")
+  self.run_single("set ConnectTimeout 5")
+  self.run_single("set THREADS 2")
+  
+  # Run the module once for each discovered target port (with the associated hosts)
+  target_ports.each do |target_port|
+    self.run_single("set RPORT #{target_port}")
+    target_rhosts = ((targets.select {|t| t['port'].eql? target_port}).map {|t| t['ip'] }).join (" ")
+    self.run_single("set RHOSTS #{target_rhosts}")
+    self.run_single("run")
+  end
+end
+</ruby>

@@ -1,0 +1,49 @@
+<ruby>
+=begin
+  Name:  battery/smb_ms17_010.rc
+    This script is intended to be used with the Metasploit Framework as a part of the battery suite of resource scripts
+    For more information see:
+      Metasploit Framework:  https://github.com/rapid7/metasploit-framework
+
+  Author: Keith Proffitt
+
+  Description:
+  Uses information disclosure to determine if MS17-010 has been patched or not. Specifically, it connects to the IPC$ tree and 
+  attempts a transaction on FID 0. If the status returned is "STATUS_INSUFF_SERVER_RESOURCES", the machine does not have the 
+  MS17-010 patch. If the machine is missing the MS17-010 patch, the module will check for an existing DoublePulsar (ring 0 
+  shellcode/malware) infection. This module does not require valid SMB credentials in default server configurations. It can log on as the 
+  user "\" and connect to IPC$.
+=end
+
+# Print Header
+print_status "Using auxiliary/scanner/smb/smb_ms17_010"
+  
+# Get a list of target services
+targets = []
+begin
+  framework.db.services.each do |service|
+    if ( service.port == 445 and service.state == 'open')
+      targets << service.host.address
+    end
+  end
+  # Remove any duplicate entries
+  targets.uniq!
+
+rescue ActiveRecord::ConnectionNotEstablished
+  puts "DB not connected..."
+  return
+end
+
+if targets.empty?
+  print_warning "No targets found"
+else
+
+  # Setup the module
+  self.run_single("use auxiliary/scanner/smb/smb_ms17_010")
+  self.run_single("set ShowProgress false")
+  self.run_single("set VERBOSE true")
+  
+  self.run_single("set RHOSTS '#{targets.join(' ')}'")
+  self.run_single("run")
+end
+</ruby>

@@ -1,0 +1,57 @@
+<ruby>
+# Print Header
+print_status "Using auxiliary/scanner/http/trace"
+  
+# Get a list of target services
+targets = []
+https_targets = []
+begin
+  framework.db.services.each do |service|
+    if ( (service.name =~  /https/i or service.name =~ /https\/ssl/i) and service.state.eql? 'open' and service.proto.eql? 'tcp')
+      https_targets << {'https_ip' => service.host.address, 'https_port' => service.port}
+    end
+    if ( service.name =~ /http/i and service.port != 443 and service.state.eql? 'open' and service.proto.eql? 'tcp')
+      targets << {'ip' => service.host.address, 'port' => service.port}
+    end
+  end
+
+  # Remove any duplicate entries
+  targets.uniq!
+  https_targets.uniq!
+
+rescue ActiveRecord::ConnectionNotEstablished
+  puts "DB not connected..."
+  return
+end
+
+#if https_targets.empty? || targets.empty?
+#  print_warning "No targets found"
+#else
+  # Get a lits of unique target ports
+  target_ports = (targets.map {|t| t['port'] }).uniq
+  https_target_ports = (https_targets.map {|t| t['https_port'] }).uniq
+
+  # Setup the module
+  self.run_single("use auxiliary/scanner/http/trace")
+  self.run_single("set ShowProgress false")
+  self.run_single("set VERBOSE true")
+  self.run_single("set HttpClientTimeout 5")
+  
+  # Run the module once for each discovered target port (with the associated hosts)
+  target_ports.each do |target_port|
+    self.run_single("set RPORT #{target_port}")
+    target_rhosts = ((targets.select {|t| t['port'].eql? target_port}).map {|t| t['ip'] }).join (" ")
+    self.run_single("set RHOSTS #{target_rhosts}")
+    self.run_single("set SSL false")
+    self.run_single("run")
+  end
+
+  https_target_ports.each do |https_target_port|
+    self.run_single("set RPORT #{https_target_port}")
+    https_target_rhosts = ((https_targets.select {|t| t['https_port'].eql? https_target_port}).map {|t| t['https_ip'] }).join (" ")
+    self.run_single("set RHOSTS #{https_target_rhosts}")
+    self.run_single("set SSL true")
+    self.run_single("run")
+  end
+#end
+</ruby>
