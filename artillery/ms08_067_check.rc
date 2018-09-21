@@ -1,17 +1,12 @@
 <ruby>
 =begin
-  Name:  battery/ms08_067_check.rc
-    This script is intended to be used with the Metasploit Framework as a part of the battery suite of resource scripts
+  Name:  artillery/ms08_067_check.rc
+    This script is intended to be used with the Metasploit Framework as a part of the artillery suite of resource scripts
     For more information see:
-      Battery Resource Scripts: https://github.com/kn0/battery
+      Artillery Resource Scripts: https://github.com/sil3ntcor3/artillery
       Metasploit Framework:  https://github.com/rapid7/metasploit-framework
 
-  Author: kn0
-    twitter: @TrentonIvey
-    email: "Trenton.Ivey@example.com".gsub(/example/,'gmail')
-    web: kn0.ninja
-
-  Description:
+Description:
     This Metasploit RC-File is used to check for the presence of MS08_067.
     It does so by using exploit/windows/smb/ms08_067_netapi against all discovered services running on 445/TCP
     This will only check host entries that have know Windows os_names in the current workspace.
