@@ -1,9 +1,9 @@
 <ruby>
 =begin
-  Name:  battery/tnspoison_checker
-    This script is intended to be used with the Metasploit Framework as a part of the battery suite of resource scripts
+  Name:  artillery/tnspoison_checker
+    This script is intended to be used with the Metasploit Framework as a part of the artillery suite of resource scripts
     For more information see:
-      Battery Resource Scripts: https://github.com/kn0/battery
+      Artillery Resource Scripts: https://github.com/sil3ntcor3/artillery
       Metasploit Framework:  https://github.com/rapid7/metasploit-framework
 
   Author: Matt Young
