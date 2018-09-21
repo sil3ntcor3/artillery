@@ -5,8 +5,8 @@
     For more information see:
       Artillery Resource Scripts: https://github.com/sil3ntcor3/artillery
       Metasploit Framework:  https://github.com/rapid7/metasploit-framework
-
-Description:
+  
+  Description:
     This Metasploit RC-File is used to check for the presence of MS08_067.
     It does so by using exploit/windows/smb/ms08_067_netapi against all discovered services running on 445/TCP
     This will only check host entries that have know Windows os_names in the current workspace.
