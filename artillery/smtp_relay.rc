@@ -1,7 +1,7 @@
 <ruby>
 =begin
-  Name:  battery/smtp_relay.rc
-    This script is intended to be used with the Metasploit Framework as a part of the battery suite of resource scripts
+  Name:  artillery/smtp_relay.rc
+    This script is intended to be used with the Metasploit Framework as a part of the artillery suite of resource scripts
     For more information see:
       Metasploit Framework:  https://github.com/rapid7/metasploit-framework
 
