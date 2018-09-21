@@ -6,7 +6,7 @@
       artillery Resource Scripts: https://github.com/sil3ntcor3/artillery
       Metasploit Framework:  https://github.com/rapid7/metasploit-framework
 
-Description:
+  Description:
     This Metasploit RC-File is used to check for anonymous FTP access.
     It does so by using auxiliary/scanner/ftp/anonymous against all discovered FTP services
     Targets are chosen by matching service names with 'ftp' and ports of 21/tcp and 2121/tcp
