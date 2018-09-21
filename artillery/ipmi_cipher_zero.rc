@@ -6,7 +6,7 @@
       artillery Resource Scripts: https://github.com/sil3ntcor3/artillery
       Metasploit Framework:  https://github.com/rapid7/metasploit-framework
 
-Description:
+  Description:
     This Metasploit RC-File is used to check for the presence of the ipmi cipher_zero vulnerability
     It does so by using auxiliary/scanner/ipmi/ipmi_cipher_zero_login against all discovered IPMI services
     Targets are chosen by matching service with open ports 623/tcp and 623/udp
