@@ -22,7 +22,7 @@ print_line "$" * 120
 print_line "  artillery Run"
 print_line "    - Time: #{Time.now.strftime('%Y%m%dT%H%M%S%z')}"
 print_line "    - Workspace: #{framework.db.workspace.name}"
-print_line "    - Source Host: #{Socket.gethostname}"
+# print_line "    - Source Host: #{Socket.gethostname}"
 print_line "$" * 120
 
 # Run all resource files in the artillery folder
